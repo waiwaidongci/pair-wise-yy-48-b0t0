@@ -23,7 +23,7 @@ const rows = computed(() => store.rules.filter((rule) => {
   <section class="page">
     <div class="page-head">
       <div><p class="eyebrow">CAUSE & EFFECT / 因果矩阵</p><h1>触发条件到动作结果</h1><p class="muted">配置延时、互锁、优先级和抑制条件；矩阵校验实时阻断矛盾规则。</p></div>
-      <div class="actions"><v-btn variant="outlined" prepend-icon="mdi-check-all" @click="store.validations.length && $router.push('/review')">校验 {{ store.validations.length }} 项</v-btn><v-btn color="primary" prepend-icon="mdi-plus" @click="store.addRule">新增规则</v-btn></div>
+      <div class="actions"><v-btn variant="outlined" prepend-icon="mdi-check-all" @click="store.validations.length && $router.push('/review')">校验 {{ store.validations.length }} 项</v-btn><v-btn variant="outlined" prepend-icon="mdi-timeline-play-outline" @click="$router.push('/simulation')">联动推演</v-btn><v-btn color="primary" prepend-icon="mdi-plus" @click="store.addRule">新增规则</v-btn></div>
     </div>
 
     <v-alert v-if="store.validations.length" type="warning" variant="tonal" density="compact" class="mb-3">

@@ -12,6 +12,7 @@ const items = [
   { to: '/', title: '项目总览', icon: 'mdi-view-dashboard-outline' },
   { to: '/devices', title: '设备与分区', icon: 'mdi-access-point' },
   { to: '/matrix', title: '因果矩阵', icon: 'mdi-grid-large' },
+  { to: '/simulation', title: '联动推演', icon: 'mdi-timeline-play-outline' },
   { to: '/dependency', title: '依赖图', icon: 'mdi-graph-outline' },
   { to: '/review', title: '版本审阅', icon: 'mdi-file-compare' },
 ]

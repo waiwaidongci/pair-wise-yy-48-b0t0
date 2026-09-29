@@ -1,19 +1,8 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
+import type { Device, DeviceType, Rule, Validation } from '../linkage/types'
 
-export type DeviceType = '感烟探测器' | '感温探测器' | '手动报警按钮' | '输入模块' | '输出模块' | '排烟风机' | '防火卷帘' | '消防广播' | '电梯'
-export type Device = { id: string; name: string; type: DeviceType; floor: string; zone: string; address: string }
-export type Rule = {
-  id: string
-  triggerId: string
-  actionId: string
-  delay: number
-  interlock: string
-  priority: 1 | 2 | 3
-  suppression: string
-  enabled: boolean
-}
-export type Validation = { id: string; severity: '错误' | '警告'; ruleIds: string[]; title: string; detail: string; suggestion: string }
+export type { Device, DeviceType, Rule, Validation }
 
 export const seedDevices: Device[] = [
   { id: 'D-01-01', name: '一层大厅感烟 01', type: '感烟探测器', floor: '1F', zone: 'A 区', address: '1-A-01-01' },
@@ -26,6 +15,7 @@ export const seedDevices: Device[] = [
   { id: 'D-02-02', name: '二层机房感烟 01', type: '感烟探测器', floor: '2F', zone: 'B 区', address: '2-B-01-02' },
   { id: 'A-02-01', name: '二层排烟风机 PF-2', type: '排烟风机', floor: '2F', zone: 'B 区', address: '2-F-01-01' },
   { id: 'A-02-02', name: '1 号客梯归位', type: '电梯', floor: '2F', zone: 'B 区', address: '2-L-01-01' },
+  { id: 'A-01-04', name: '一层声光警报器 01', type: '声光警报器', floor: '1F', zone: 'A 区', address: '1-S-01-01' },
 ]
 
 export const seedRules: Rule[] = [
@@ -37,10 +27,11 @@ export const seedRules: Rule[] = [
   { id: 'R-006', triggerId: 'D-02-01', actionId: 'A-02-02', delay: 10, interlock: '轿厢无人确认', priority: 2, suppression: '消防电梯模式', enabled: true },
   { id: 'R-007', triggerId: 'D-02-02', actionId: 'A-01-01', delay: 0, interlock: '无', priority: 3, suppression: '无', enabled: false },
   { id: 'R-008', triggerId: 'D-01-01', actionId: 'A-02-02', delay: 0, interlock: '无', priority: 1, suppression: '无', enabled: true },
+  { id: 'R-009', triggerId: 'A-01-01', actionId: 'A-01-04', delay: 0, interlock: '无', priority: 2, suppression: '无', enabled: true },
 ]
 
 export const useLinkageStore = defineStore('linkage', () => {
-  const saved = localStorage.getItem('fire-linkage-draft-v1')
+  const saved = localStorage.getItem('fire-linkage-draft-v2')
   const restored = saved ? JSON.parse(saved) : null
   const devices = ref<Device[]>(restored?.devices ?? structuredClone(seedDevices))
   const rules = ref<Rule[]>(restored?.rules ?? structuredClone(seedRules))
@@ -77,7 +68,7 @@ export const useLinkageStore = defineStore('linkage', () => {
   })
 
   watch([devices, rules, revision, locked, acceptedChanges], () => {
-    localStorage.setItem('fire-linkage-draft-v1', JSON.stringify({ devices: devices.value, rules: rules.value, revision: revision.value, locked: locked.value, acceptedChanges: acceptedChanges.value }))
+    localStorage.setItem('fire-linkage-draft-v2', JSON.stringify({ devices: devices.value, rules: rules.value, revision: revision.value, locked: locked.value, acceptedChanges: acceptedChanges.value }))
   }, { deep: true })
 
   function updateRule(id: string, patch: Partial<Rule>) {
